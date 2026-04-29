@@ -8,5 +8,15 @@
       "matchDepNames": ["python"],
       "ignoreUnstable": true
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.github/workflows/test\\.yaml$"],
+      "matchStrings": ["python-version: \\[(?<currentValue>.*)\\]"],
+      "datasourceTemplate": "python-release",
+      "depNameTemplate": "python",
+      "versioningTemplate": "python"
+    }
   ]
 }
