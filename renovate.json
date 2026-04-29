@@ -1,5 +1,0 @@
-{
-  "extends": ["config:recommended"],
-  "schedule": ["after 10pm every weekday"],
-  "automerge": false
-}
