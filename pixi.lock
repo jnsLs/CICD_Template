@@ -12,7 +12,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/bzip2-1.0.8-hda65f42_9.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.4.22-hbd8a1cb_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/cowpy-1.1.5-pyhd8ed1ab_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/icu-78.3-h33c6efd_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ld_impl_linux-64-2.45.1-default_hbd61a6d_102.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libexpat-2.7.5-hecca717_0.conda
@@ -33,6 +32,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/tk-8.6.13-noxft_h366c992_103.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb78ec9c_6.conda
+      - pypi: https://files.pythonhosted.org/packages/29/a2/76daec910034d765f1018d22660c0970fb99f77143a42841d067b522903e/cowpy-1.1.5-py3-none-any.whl
       - pypi: ./
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
@@ -69,21 +69,15 @@ packages:
   purls: []
   size: 131039
   timestamp: 1776865545798
-- conda: https://conda.anaconda.org/conda-forge/noarch/cowpy-1.1.5-pyhd8ed1ab_2.conda
-  sha256: 93894ea450152d39abb74bedc0cdbaa04a8d9889f15b50ee2025f3ee341a59d7
-  md5: f9a885055710bee65b2b081f7a671167
-  depends:
-  - python >=3.9
-  license: Apache-2.0
-  license_family: Apache
-  purls:
-  - pkg:pypi/cowpy?source=hash-mapping
-  size: 23626
-  timestamp: 1735677457811
+- pypi: https://files.pythonhosted.org/packages/29/a2/76daec910034d765f1018d22660c0970fb99f77143a42841d067b522903e/cowpy-1.1.5-py3-none-any.whl
+  name: cowpy
+  version: 1.1.5
+  sha256: de5ae7646dd30b4936013666c6bd019af9cf411cc3b377c8538cfd8414262921
+  requires_python: '>=3.6'
 - pypi: ./
   name: hello-world
   version: 0.1.0
-  sha256: ba449e0db859976547f4bb0688662f15741a4ced3e607ea7b6ecd6f1ee970d25
+  sha256: a9e33b8e8a028f9b32d3ef2edba92934cfacab893d3d9e47eb723f511166a4f1
   requires_dist:
   - cowpy>=1.1.5,<2
   requires_python: '>=3.11,<3.14'
