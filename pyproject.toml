@@ -20,8 +20,7 @@ platforms = ["linux-64"]
 hello_world = { path = ".", editable = true }
 
 [tool.pixi.tasks]
-start = "python ./src/scripts/hello.py"
+start = "python ./src/scripts/cli.py"
 
 [tool.pixi.dependencies]
-python = ">=3.12,<3.14" 
 cowpy = ">=1.1.5,<2"
