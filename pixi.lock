@@ -77,10 +77,10 @@ packages:
 - pypi: ./
   name: hello-world
   version: 0.1.0
-  sha256: a9e33b8e8a028f9b32d3ef2edba92934cfacab893d3d9e47eb723f511166a4f1
+  sha256: d495209a1e6ed03a27599734f0d4bbfd0361b0f890e17c0cf4174e72475fc447
   requires_dist:
   - cowpy>=1.1.5,<2
-  requires_python: '>=3.11,<3.14'
+  requires_python: '>=3.11,<3.15'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/icu-78.3-h33c6efd_0.conda
   sha256: fbf86c4a59c2ed05bbffb2ba25c7ed94f6185ec30ecb691615d42342baa1a16a
   md5: c80d8a3b84358cb967fa81e7075fbc8a
