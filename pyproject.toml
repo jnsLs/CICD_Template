@@ -21,6 +21,3 @@ hello_world = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 start = "python ./src/scripts/cli.py"
-
-[tool.pixi.dependencies]
-cowpy = ">=1.1.5,<2"
