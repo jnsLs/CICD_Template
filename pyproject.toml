@@ -23,5 +23,5 @@ hello_world = { path = ".", editable = true }
 start = "python ./src/scripts/hello.py"
 
 [tool.pixi.dependencies]
+python = ">=3.12,<3.14" 
 cowpy = ">=1.1.5,<2"
-python = "==3.12"
