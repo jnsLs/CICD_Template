@@ -21,3 +21,6 @@ hello_world = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 start = "python ./src/scripts/cli.py"
+
+[tool.pixi.dependencies]
+pre-commit = ">=4.6.0,<5"
