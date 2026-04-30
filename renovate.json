@@ -1,26 +1,36 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "postUpdateOptions": ["commands"],
+  "extends": ["config:recommended"],
+
+  "postUpgradeTasks": {
+    "commands": [
+      "curl -fsSL https://pixi.sh/install.sh | bash",
+      "pixi install"
+    ],
+    "executionMode": "branch"
+  },
+
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+
   "packageRules": [
     {
       "matchDepNames": ["python"],
-      "ignoreUnstable": true
-    },
-    {
-      "matchManagers": ["pep621"],
-      "postUpdateCommands": ["pixi install"]
+      "ignoreUnstable": true,
+      "rangeStrategy": "replace"
     }
   ],
+
   "customManagers": [
     {
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/test\\.yaml$/"
       ],
-      "matchStrings": ["python-version: \\[(?<currentValue>.*)\\]"],
+      "matchStrings": [
+        "python-version:\\s*\\[(?<currentValue>[0-9.,\\s]+)\\]"
+      ],
       "datasourceTemplate": "python-release",
       "depNameTemplate": "python",
       "versioningTemplate": "python"
