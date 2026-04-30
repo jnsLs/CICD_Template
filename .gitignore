@@ -1,3 +1,7 @@
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+# local python workspace/cache artifacts
+src/hello_world/__pyspace__/
+src/scripts/__pyspace__/
