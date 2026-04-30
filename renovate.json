@@ -3,10 +3,15 @@
   "extends": [
     "config:recommended"
   ],
+  "postUpdateOptions": ["commands"],
   "packageRules": [
     {
       "matchDepNames": ["python"],
       "ignoreUnstable": true
+    },
+    {
+      "matchManagers": ["pep621"],
+      "postUpdateCommands": ["pixi install"]
     }
   ],
   "customManagers": [
