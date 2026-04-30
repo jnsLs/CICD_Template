@@ -21,10 +21,12 @@ hello_world = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 start = "python ./src/scripts/cli.py"
+test = "pytest"
 
 [tool.pixi.dependencies]
 pre-commit = ">=4.6.0,<5"
 ruff = ">=0.15.11,<0.16"
+pytest = ">=7.0,<8"
 
 [tool.ruff]
 line-length = 88
