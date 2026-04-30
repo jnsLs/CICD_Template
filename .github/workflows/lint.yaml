@@ -24,5 +24,8 @@ jobs:
       - name: Install dependencies
         run: pixi install
 
-      - name: Run Ruff
+      - name: Check lint
         run: pixi run ruff check --output-format=github
+
+      - name: Check formatting
+        run: pixi run ruff format --check .
