@@ -146,7 +146,7 @@ packages:
 - pypi: ./
   name: hello-world
   version: 0.1.0
-  sha256: 8c8750d7f7320b0f93dc0a0ac8569d7e57b1768155a5350d518474b290a50fe7
+  sha256: e29d4bd66a06c1dc885d4aae029eef5463daf76f45438ff413313a89891a4630
   requires_dist:
   - cowpy>=1.1.5,<2
   requires_python: '>=3.11,<3.12'
