@@ -9,7 +9,7 @@
 - Flow: feature → dev → main
 
 ### Branch Protection Rules
-Apply rules to **`main`** and **`dev`**: 
+Apply rules to **`main`** and **`dev`**:
 - repo settings → branches → add branch ruleset
 - Require pull requests (no direct pushes)
 - Require status checks (tests, lint, etc.)
@@ -53,13 +53,31 @@ Responsibilities:
 #### Performance Tip: Caching
 Use caching (e.g. `actions/cache` or Pixi caching) to speed up builds significantly.
 
+#### Workflow Hygiene
+Small additions that make workflows cheaper, safer, and easier to debug:
+- **`concurrency` group**: cancel older runs on the same branch/PR when a new commit is pushed. Saves CI minutes and avoids stale "green checks" from outdated commits.
+  ```yaml
+  concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+  ```
+- **`timeout-minutes` per job**: hard ceiling so a hung job doesn't burn the full 6-hour default.
+  ```yaml
+  jobs:
+    tests:
+      timeout-minutes: 15
+  ```
+- **Upload artifacts on failure**: keep test reports / logs so you can debug without re-running. Use `if: failure()` and `actions/upload-artifact`. Tip: have `pytest` write a JUnit XML (`pytest --junitxml=pytest-results.xml`) — no extra deps needed.
+- **Coverage reporting**: `pytest-cov` is wired into the `test` pixi task (`pytest --cov=src --cov-report=term-missing`) so you see covered/uncovered lines locally. CI additionally writes `coverage.xml`, uploads it as a GitHub artifact, and pushes it to **Codecov** via `codecov/codecov-action@v5`. Codecov posts a comment on every PR with the coverage diff. Behavior is tuned in [`codecov.yml`](codecov.yml) (project threshold, patch coverage targets). To enforce a hard local minimum, add `--cov-fail-under=N` to the test task.
+  - **One-time setup required**: sign in at [codecov.io](https://about.codecov.io/) with GitHub, add this repo, copy the upload token, and add it as `CODECOV_TOKEN` under repo settings → Secrets and variables → Actions.
+
 
 ### Precommits:
 - `pip install pre-commit` or `pixi add pre-commit`
 - create .pre-commit-config.yaml
 - `pre-commit install`
 - pre-commit only runs on staged files. otherwise use: pixi run pre-commit run --all-files
-  
+
 ---
 
 ### Release Workflow (`release.yml`)
@@ -101,4 +119,3 @@ Responsibilities:
 Pixi package management and programming environments:
 - https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry
 - https://jacobtomlinson.dev/posts/2025/python-package-managers-uv-vs-pixi/
-
