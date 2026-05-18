@@ -13,25 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 1. Enforcement: Ensure only 'dev' merges into 'main'
-  check_branch:
-    name: Validate Branch Flow
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    if: github.base_ref == 'main'
-    steps:
-      - name: Enforce dev -> main flow
-        if: github.head_ref != 'dev'
-        run: |
-          echo "ERROR: Direct merges to 'main' are restricted. PRs must come from 'dev'."
-          exit 1
-
-  # 2. Combined Quality Check: Linting & Testing
   tests:
     name: Lint & Test
-    needs: check_branch
-    # Only run tests if branch check passes (or isn't targeting main)
-    if: always() && (needs.check_branch.result == 'success' || github.base_ref != 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 15
 

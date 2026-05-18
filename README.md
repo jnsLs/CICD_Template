@@ -11,13 +11,15 @@
 > **Trunk-based alternative**: for small projects with one or two contributors, skip `dev` and target `main` directly (feature → main). The two-branch model only pays off when you need a staging integration point separate from production — e.g. multiple in-flight features that have to integrate before release. Otherwise the extra branch is just review/merge overhead.
 
 ### Branch Protection Rules
-Apply rules to **`main`** and **`dev`**:
-- repo settings → branches → add branch ruleset
+Apply rules to **`main`** and **`dev`** via repo settings → branches → add branch ruleset:
 - Require pull requests (no direct pushes)
 - Require status checks (tests, lint, etc.)
 - Require branches to be up-to-date before merging
 - Optionally require at least 1 review
-- Require linear history (prevents messy merge commits) (only rebase and squash merges)
+- Require linear history (prevents messy merge commits — only rebase and squash merges)
+- **Restrict who can push** to `main` (only maintainers / specific roles) to enforce the feature → dev → main flow
+
+> **Don't enforce branch flow in CI.** A CI job that fails when a PR to `main` doesn't come from `dev` looks like a guardrail but isn't one — anyone opening the PR can edit `.github/workflows/*.yml` in the same PR to disable the check. Use branch protection (push restrictions + required reviews from maintainers) instead. GitHub doesn't have a native "PR source must be branch X" rule, so the practical model is: lock down who can merge into `main`, and let convention + review handle the rest.
 
 ### Environments (TODO)
 Use GitHub Environments:
