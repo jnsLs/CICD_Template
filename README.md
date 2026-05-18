@@ -70,6 +70,7 @@ Trigger on **GitHub Releases**, not just tags:
 on:
   release:
     types: [published]
+```
 
 Responsibilities:
 - build package
