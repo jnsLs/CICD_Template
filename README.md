@@ -11,8 +11,7 @@
 > **Trunk-based alternative**: for small projects with one or two contributors, skip `dev` and target `main` directly (feature → main). The two-branch model only pays off when you need a staging integration point separate from production — e.g. multiple in-flight features that have to integrate before release. Otherwise the extra branch is just review/merge overhead.
 
 ### Branch Protection Rules
-Apply rules to **`main`** and **`dev`**:
-- repo settings → branches → add branch ruleset
+Apply rules to **`main`** and **`dev`** via repo settings → branches → add branch ruleset:
 - Require pull requests (no direct pushes)
 - Require status checks (tests, lint, etc.)
 - Require branches to be up-to-date before merging
