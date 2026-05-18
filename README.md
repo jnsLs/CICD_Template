@@ -98,6 +98,6 @@ Responsibilities:
 
 ## 5. References:
 Pixi package management and programming environments:
-https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry
-https://jacobtomlinson.dev/posts/2025/python-package-managers-uv-vs-pixi/
+- https://stackoverflow.com/questions/70851048/does-it-make-sense-to-use-conda-poetry
+- https://jacobtomlinson.dev/posts/2025/python-package-managers-uv-vs-pixi/
 
