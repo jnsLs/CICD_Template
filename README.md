@@ -8,6 +8,8 @@
 - `feature/*` → feature branches
 - Flow: feature → dev → main
 
+> **Trunk-based alternative**: for small projects with one or two contributors, skip `dev` and target `main` directly (feature → main). The two-branch model only pays off when you need a staging integration point separate from production — e.g. multiple in-flight features that have to integrate before release. Otherwise the extra branch is just review/merge overhead.
+
 ### Branch Protection Rules
 Apply rules to **`main`** and **`dev`**:
 - repo settings → branches → add branch ruleset
@@ -83,23 +85,51 @@ Small additions that make workflows cheaper, safer, and easier to debug:
 ### Release Workflow (`release.yml`)
 
 #### Trigger (IMPORTANT)
-Trigger on **GitHub Releases**, not just tags:
+Trigger on **GitHub Releases**, not just tags. A minimal job skeleton using PyPI Trusted Publishers (no API token to store or rotate):
+
 ```yaml
+name: Release
+
 on:
   release:
     types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi  # optional: gate on a GitHub Environment with required reviewers
+    permissions:
+      id-token: write  # REQUIRED for PyPI Trusted Publishers (OIDC)
+      contents: read   # least privilege; we only need to checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Pixi
+        uses: prefix-dev/setup-pixi@v0.9.5
+        with:
+          cache: true
+          frozen: true
+
+      - name: Build distribution
+        run: pixi run python -m build  # requires `build` in pixi deps
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # No `password:` — OIDC handles auth via the id-token permission.
 ```
 
-Responsibilities:
-- build package
-- publish to PyPI (or internal registry)
-- use PyPI Trusted Publishers (OIDC) (Avoid storing API tokens)
-- create hooks for documentation like read-the-docs
-    - auto-build on push to main
-    - use docs/ + mkdocs or sphinx
+The OIDC handshake requires both `id-token: write` in the workflow **and** a one-time Trusted Publisher entry on PyPI (Account → Publishing → Add a new publisher).
+
+### Documentation (`docs.yml`)
+Docs build/publish belongs in its own workflow, separate from release:
+- **Tooling**: [MkDocs](https://www.mkdocs.org/) (Markdown-based, simple) or [Sphinx](https://www.sphinx-doc.org/) (richer, common in scientific Python).
+- **Hosting**: [Read the Docs](https://readthedocs.org/) auto-builds on push to `main` once you connect the repo — no workflow file needed beyond webhook setup. Alternative: build in Actions and deploy to GitHub Pages.
+- **Triggers**: on push to `main` (publish) and on PRs (build-only, to catch broken docs before merge).
+- Keep sources in `docs/`.
 
 ## 3. GitHub Apps:
-- CodeRabit or Copilot for automatic PR reviews
+- CodeRabbit or Copilot for automatic PR reviews
 - Renovate or Dependabot to keep dependencies up to date
 - Renovate has a dashboard and also creates an issue where you can see an overview of the detected dependencies and PRs in the pipeline
 - You can set it up in the renovate.json file in the root directory of your repository
@@ -107,7 +137,7 @@ Responsibilities:
 - Avoid python version matrices because renovate cannot handle those
 - After pyproject.toml is updated, one probably has to run pixi install again in order to update the lock file
 
-## 4. Reproducability with Pixi:
+## 4. Reproducibility with Pixi:
 - Use pixi.toml, pyproject.toml and pixi.lock.
 - pyproject.toml declares compatible ranges
 - pixi.lock freezes exact versions (including transitive deps)
