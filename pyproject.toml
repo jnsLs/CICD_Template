@@ -21,12 +21,13 @@ hello_world = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 start = "python ./src/scripts/cli.py"
-test = "pytest"
+test = "pytest --cov=src --cov-report=term-missing"
 
 [tool.pixi.dependencies]
 pre-commit = ">=4.6.0,<5"
 ruff = ">=0.15.11,<0.16"
 pytest = ">=9,<10"
+pytest-cov = ">=7,<8"
 
 [tool.ruff]
 line-length = 88

@@ -7,11 +7,17 @@ on:
     branches: [main, dev]
   workflow_dispatch:
 
+# Cancel older runs on the same branch/PR when a new commit is pushed.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # 1. Enforcement: Ensure only 'dev' merges into 'main'
   check_branch:
     name: Validate Branch Flow
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     if: github.base_ref == 'main'
     steps:
       - name: Enforce dev -> main flow
@@ -27,6 +33,7 @@ jobs:
     # Only run tests if branch check passes (or isn't targeting main)
     if: always() && (needs.check_branch.result == 'success' || github.base_ref != 'main')
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v6
@@ -45,4 +52,24 @@ jobs:
         run: pixi run ruff format --check .
 
       - name: Run Tests
-        run: pixi run test
+        run: pixi run test --junitxml=pytest-results.xml --cov-report=xml
+
+      # Upload regardless of pass/fail: junit XML helps debug failures,
+      # coverage XML is most useful on green builds for tracking trends.
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            pytest-results.xml
+            coverage.xml
+          retention-days: 14
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: false  # don't block the build if Codecov is down

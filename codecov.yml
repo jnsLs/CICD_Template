@@ -1,0 +1,20 @@
+# Codecov configuration. Full reference: https://docs.codecov.com/docs/codecov-yaml
+coverage:
+  status:
+    project:
+      default:
+        # Compare overall coverage against the base branch.
+        target: auto
+        # Allow a 1% drop without failing the status check (avoids flaky noise).
+        threshold: 1%
+    patch:
+      default:
+        # Coverage on lines changed in the PR specifically.
+        # Switch from `auto` to a fixed percentage (e.g. 80%) to enforce a floor on new code.
+        target: auto
+        threshold: 0%
+
+comment:
+  layout: "diff, flags, files"
+  # Only post the PR comment when coverage actually changes.
+  require_changes: true
