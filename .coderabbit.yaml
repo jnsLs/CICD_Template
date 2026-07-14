@@ -1,0 +1,42 @@
+# CodeRabbit configuration.
+# Full schema: https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+# Docs: https://docs.coderabbit.ai/getting-started/configure-coderabbit
+
+# yaml-language-server: $schema=https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+
+language: en-US
+# Give CodeRabbit context about the project so reviews are relevant.
+tone_instructions: >-
+  This is a small sandbox for learning CI/CD, Pixi, and GitHub Apps. Prefer
+  concise, high-signal feedback over exhaustive nitpicks.
+
+reviews:
+  # "chill" is less nitpicky than "assertive" — a good fit for a sandbox.
+  profile: chill
+  # false = CodeRabbit comments but never sets a blocking "changes requested"
+  request_changes_workflow: false
+  # A short natural-language summary of the PR at the top.
+  high_level_summary: true
+  # The (in)famous review poem — off to keep comments focused.
+  poem: false
+  # Collapsed walkthrough of the changes.
+  review_status: true
+
+  auto_review:
+    enabled: true
+    # Don't review while a PR is still a draft.
+    drafts: false
+    # Only auto-review PRs targeting our integration/production branches,
+    # matching the feature -> dev -> main flow.
+    base_branches:
+      - dev
+      - main
+
+  # Built-in linters/analyzers CodeRabbit can run on top of its own review.
+  tools:
+    ruff:
+      enabled: true
+
+chat:
+  # Let CodeRabbit reply to @coderabbitai mentions in PR threads.
+  auto_reply: true
