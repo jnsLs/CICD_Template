@@ -3,17 +3,39 @@
 
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "baseBranches": ["dev"],
+
+  "dependencyDashboard": true,
 
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 4am on monday"]
+    "schedule": ["before 4am on monday"],
+    "automerge": true
   },
 
   "packageRules": [
     {
+      "description": "Python: track stable releases only, widen ranges in place.",
       "matchDepNames": ["python"],
       "ignoreUnstable": true,
       "rangeStrategy": "replace"
+    },
+    {
+      "description": "Collapse the many GitHub Actions bumps into one grouped, automerged PR.",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "automerge": true
+    },
+    {
+      "description": "Automerge non-major updates once CI passes (requires branch protection with required checks to be a real gate).",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "description": "Major updates always get a manual PR + review.",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"]
     }
   ]
 }

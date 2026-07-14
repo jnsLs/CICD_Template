@@ -28,6 +28,7 @@ pre-commit = ">=4.6.0,<5"
 ruff = ">=0.15.11,<0.16"
 pytest = ">=9,<10"
 pytest-cov = ">=7,<8"
+python-build = ">=1,<2"
 
 [tool.ruff]
 line-length = 88
@@ -35,4 +36,5 @@ target-version = "py311"
 preview = true
 
 [tool.ruff.lint]
-select = ["E", "F", "W"]
+# E/W pycodestyle, F pyflakes, I import sorting, B bugbear, UP pyupgrade.
+select = ["E", "F", "W", "I", "B", "UP"]
