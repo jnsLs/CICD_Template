@@ -43,10 +43,9 @@ Recommended setup:
 
 ---
 
-### CI Workflow (`ci.yml`)
+### CI Workflow ([`integrate.yaml`](.github/workflows/integrate.yaml))
 Runs on:
-#TODO: change this accordingly in the code
-- Pull requests to `dev`
+- Pushes to `main` and `dev`, and pull requests targeting them (plus manual `workflow_dispatch`)
 
 Responsibilities:
 - Install dependencies (via Pixi)
@@ -132,10 +131,13 @@ Docs build/publish belongs in its own workflow, separate from release:
 
 ## 3. GitHub Apps:
 - CodeRabbit or Copilot for automatic PR reviews
+  - Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai) on the repo — the config file alone does nothing until the app is installed.
+  - Behavior is tuned in [`.coderabbit.yaml`](.coderabbit.yaml): it auto-reviews PRs targeting `dev`/`main`, uses the less-nitpicky `chill` profile, and won't block merges (`request_changes_workflow: false`).
 - Renovate or Dependabot to keep dependencies up to date
 - Renovate has a dashboard and also creates an issue where you can see an overview of the detected dependencies and PRs in the pipeline
-- You can set it up in the renovate.json file in the root directory of your repository
+- You can set it up in the [`renovate.json`](renovate.json) file in the root directory of your repository
 - It will repeatedly create PRs where it suggests updated workflow files, pyproject.toml files, …
+- This repo's config **groups** all GitHub Actions bumps into one PR and **automerges** minor/patch + lockfile updates once CI is green (majors stay manual). Automerge only acts as a real gate when branch protection with required status checks is enabled.
 - Avoid python version matrices because renovate cannot handle those
 - After pyproject.toml is updated, one probably has to run pixi install again in order to update the lock file
 
