@@ -11,3 +11,5 @@
 coverage.xml
 pytest-results.xml
 htmlcov/
+
+.vscode
