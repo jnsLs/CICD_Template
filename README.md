@@ -16,7 +16,7 @@ Apply rules to **`main`** and **`dev`** via repo settings → branches → add b
 - Require status checks (tests, lint, etc.)
 - Require branches to be up-to-date before merging
 - Optionally require at least 1 review
-- Require linear history (prevents messy merge commits — only rebase and squash merges)
+- Do never rebase main on dev or feature branch
 - **Restrict who can push** to `main` (only maintainers / specific roles) to enforce the feature → dev → main flow
 
 > **Don't enforce branch flow in CI.** A CI job that fails when a PR to `main` doesn't come from `dev` looks like a guardrail but isn't one — anyone opening the PR can edit `.github/workflows/*.yml` in the same PR to disable the check. Use branch protection (push restrictions + required reviews from maintainers) instead. GitHub doesn't have a native "PR source must be branch X" rule, so the practical model is: lock down who can merge into `main`, and let convention + review handle the rest.
