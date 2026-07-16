@@ -23,7 +23,7 @@ reviews:
   review_status: true
 
   auto_review:
-    enabled: true
+    enabled: false
     # Don't review while a PR is still a draft.
     drafts: false
     # Only auto-review PRs targeting our integration/production branches,
