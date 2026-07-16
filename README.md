@@ -7,8 +7,8 @@
 - `dev` → integration branch (PR target)
 - `feature/*` → feature branches
 - Flow: feature → dev → main
+- Never rebase main on dev or feature branch
 
-> **Trunk-based alternative**: for small projects with one or two contributors, skip `dev` and target `main` directly (feature → main). The two-branch model only pays off when you need a staging integration point separate from production — e.g. multiple in-flight features that have to integrate before release. Otherwise the extra branch is just review/merge overhead.
 
 ### Branch Protection Rules
 Apply rules to **`main`** and **`dev`** via repo settings → branches → add branch ruleset:
@@ -16,10 +16,8 @@ Apply rules to **`main`** and **`dev`** via repo settings → branches → add b
 - Require status checks (tests, lint, etc.)
 - Require branches to be up-to-date before merging
 - Optionally require at least 1 review
-- Never rebase main on dev or feature branch
 - **Restrict who can push** to `main` (only maintainers / specific roles) to enforce the feature → dev → main flow
 
-> **Don't enforce branch flow in CI.** A CI job that fails when a PR to `main` doesn't come from `dev` looks like a guardrail but isn't one — anyone opening the PR can edit `.github/workflows/*.yml` in the same PR to disable the check. Use branch protection (push restrictions + required reviews from maintainers) instead. GitHub doesn't have a native "PR source must be branch X" rule, so the practical model is: lock down who can merge into `main`, and let convention + review handle the rest.
 
 ### Environments (TODO)
 Use GitHub Environments:
@@ -58,18 +56,7 @@ Use caching (e.g. `actions/cache` or Pixi caching) to speed up builds significan
 
 #### Workflow Hygiene
 Small additions that make workflows cheaper, safer, and easier to debug:
-- **`concurrency` group**: cancel older runs on the same branch/PR when a new commit is pushed. Saves CI minutes and avoids stale "green checks" from outdated commits.
-  ```yaml
-  concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
-  ```
-- **`timeout-minutes` per job**: hard ceiling so a hung job doesn't burn the full 6-hour default.
-  ```yaml
-  jobs:
-    tests:
-      timeout-minutes: 15
-  ```
+
 - **Upload artifacts on failure**: keep test reports / logs so you can debug without re-running. Use `if: failure()` and `actions/upload-artifact`. Tip: have `pytest` write a JUnit XML (`pytest --junitxml=pytest-results.xml`) — no extra deps needed.
 - **Coverage reporting**: `pytest-cov` is wired into the `test` pixi task (`pytest --cov=src --cov-report=term-missing`) so you see covered/uncovered lines locally. CI additionally writes `coverage.xml`, uploads it as a GitHub artifact, and pushes it to **Codecov** via `codecov/codecov-action@v5`. Codecov posts a comment on every PR with the coverage diff. Behavior is tuned in [`codecov.yml`](codecov.yml) (project threshold, patch coverage targets). To enforce a hard local minimum, add `--cov-fail-under=N` to the test task.
   - **One-time setup required**: sign in at [codecov.io](https://about.codecov.io/) with GitHub, add this repo, copy the upload token, and add it as `CODECOV_TOKEN` under repo settings → Secrets and variables → Actions.
@@ -85,40 +72,8 @@ Small additions that make workflows cheaper, safer, and easier to debug:
 
 ### Release Workflow (`release.yml`)
 
-#### Trigger (IMPORTANT)
 Trigger on **GitHub Releases**, not just tags. A minimal job skeleton using PyPI Trusted Publishers (no API token to store or rotate):
 
-```yaml
-name: Release
-
-on:
-  release:
-    types: [published]
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    environment: pypi  # optional: gate on a GitHub Environment with required reviewers
-    permissions:
-      id-token: write  # REQUIRED for PyPI Trusted Publishers (OIDC)
-      contents: read   # least privilege; we only need to checkout
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Pixi
-        uses: prefix-dev/setup-pixi@v0.9.5
-        with:
-          cache: true
-          frozen: true
-
-      - name: Build distribution
-        run: pixi run python -m build  # requires `build` in pixi deps
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        # No `password:` — OIDC handles auth via the id-token permission.
-```
 
 The OIDC handshake requires both `id-token: write` in the workflow **and** a one-time Trusted Publisher entry on PyPI (Account → Publishing → Add a new publisher).
 
@@ -130,7 +85,7 @@ Docs build/publish belongs in its own workflow, separate from release:
 - Keep sources in `docs/`.
 
 ## 3. GitHub Apps:
-- CodeRabbit or Copilot for automatic PR reviews
+- CodeRabbit or Copilot for automatic PR reviews (currently disabled)
   - Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai) on the repo — the config file alone does nothing until the app is installed.
   - Behavior is tuned in [`.coderabbit.yaml`](.coderabbit.yaml): it auto-reviews PRs targeting `dev`/`main`, uses the less-nitpicky `chill` profile, and won't block merges (`request_changes_workflow: false`).
 - Renovate or Dependabot to keep dependencies up to date
