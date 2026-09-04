@@ -42,7 +42,7 @@ Recommended setup:
 
 ---
 
-### CI Workflow ([`integrate.yaml`](.github/workflows/integrate.yaml))
+### CI Workflow ([`integrate.yml`](.github/workflows/integrate.yml))
 Runs on:
 - Pushes to `main` and `dev`, and pull requests targeting them (plus manual `workflow_dispatch`)
 
@@ -70,12 +70,21 @@ Use caching (e.g. `actions/cache` or Pixi caching) to speed up builds significan
 
 ---
 
-### Release Workflow ([`deploy.yaml`](.github/workflows/deploy.yaml))
+### Release Workflow ([`deploy.yml`](.github/workflows/deploy.yml))
+Runs on: publishing a GitHub Release (`release: published`) — creating a tag alone does not trigger it.
 
-Trigger on **GitHub Releases**, not just tags. A minimal job skeleton using PyPI Trusted Publishers (no API token to store or rotate):
+#### Trusted Publisher on PyPI (one-time)
+No `PYPI_API_TOKEN` needed — auth is OIDC, gated by `permissions: id-token: write` in the workflow.
+- If the project doesn't exist on PyPI yet: https://pypi.org/manage/account/publishing/ → "Add a new pending publisher". The first successful publish then creates the project and converts this into a normal trusted publisher automatically.
+- If it already exists: project page → Settings → Publishing → "Add a new publisher".
+- Fill in exactly: **PyPI project name**, **Owner** (GitHub org/user), **Repository name**, **Workflow filename** (`deploy.yml`), **Environment name** (leave blank — this workflow doesn't declare a GitHub Environment).
+- These fields are matched character-for-character against the workflow run's OIDC claims.
 
-
-The OIDC handshake requires both `id-token: write` in the workflow **and** a one-time Trusted Publisher entry on PyPI (Account → Publishing → Add a new publisher).
+#### Cutting a release
+1. Bump `version` in `pyproject.toml` and merge that change into the branch you release from (`main`) — the workflow builds whatever `pyproject.toml` says **on the tagged commit**, not on `dev`. Tagging before the merge silently rebuilds the previous version.
+2. On the GitHub repo page: Releases → "Create a new release" → set the tag to match the version (e.g. `v0.1.2` for `0.1.2`) → publish.
+3. PyPI versions are immutable: once a version is uploaded it can never be replaced, only [yanked](https://packaging.python.org/en/latest/guides/making-a-pypi-friendly-readme/). Any fix, however small, needs a fresh version bump.
+4. Verify: check the workflow run succeeded, then confirm the new version shows up at `https://pypi.org/project/<name>/`.
 
 ### Documentation (`docs.yml`)
 Docs build/publish belongs in its own workflow, separate from release:
