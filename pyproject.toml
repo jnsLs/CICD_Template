@@ -1,7 +1,7 @@
 [project]
 authors = [{name = "Jonas", email = "jonas.lederer@tu-berlin.de"}]
 dependencies = ["cowpy>=1.1.5,<2"]
-name = "hello_world"
+name = "cicd_template"
 requires-python = ">=3.14,<3.15"
 version = "0.1.0"
 
@@ -17,7 +17,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64"]
 
 [tool.pixi.pypi-dependencies]
-hello_world = { path = ".", editable = true }
+cicd_template = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 start = "python ./src/scripts/cli.py"
