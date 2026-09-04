@@ -56,10 +56,9 @@ Responsibilities:
 Use caching (e.g. `actions/cache` or Pixi caching) to speed up builds significantly.
 
 #### Workflow Hygiene
-Small additions that make workflows cheaper, safer, and easier to debug:
 
 - **Upload artifacts on failure**: keep test reports / logs so you can debug without re-running. Use `if: failure()` and `actions/upload-artifact`. Tip: have `pytest` write a JUnit XML (`pytest --junitxml=pytest-results.xml`) — no extra deps needed.
-- **Coverage reporting**: `pytest-cov` is wired into the `test` pixi task (`pytest --cov=src --cov-report=term-missing`) so you see covered/uncovered lines locally. CI additionally writes `coverage.xml`, uploads it as a GitHub artifact, and pushes it to **Codecov** via `codecov/codecov-action@v5`. Codecov posts a comment on every PR with the coverage diff. Behavior is tuned in [`codecov.yml`](codecov.yml) (project threshold, patch coverage targets). To enforce a hard local minimum, add `--cov-fail-under=N` to the test task.
+- **Coverage reporting**: `pytest-cov` shows covered/uncovered lines. Is part of the `test` pixi task (`pytest --cov=src --cov-report=term-missing`) which you can run locally. CI additionally writes `coverage.xml`, uploads it as a GitHub artifact, and pushes it to **Codecov** via `codecov/codecov-action@v5`. Codecov posts a comment on every PR with the coverage diff. Behavior is tuned in [`codecov.yml`](codecov.yml) (project threshold, patch coverage targets). To enforce a hard local minimum, add `--cov-fail-under=N` to the test task.
   - **One-time setup required**: sign in at [codecov.io](https://about.codecov.io/) with GitHub, add this repo, copy the upload token, and add it as `CODECOV_TOKEN` under repo settings → Secrets and variables → Actions.
 
 
