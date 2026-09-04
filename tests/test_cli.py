@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.cli import build_message, main
+from cicd_template.cli import build_message, main
 
 
 def test_build_message_contains_text() -> None:
