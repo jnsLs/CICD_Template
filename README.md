@@ -70,7 +70,7 @@ Use caching (e.g. `actions/cache` or Pixi caching) to speed up builds significan
 
 ---
 
-### Release Workflow (`release.yml`)
+### Release Workflow ([`deploy.yaml`](.github/workflows/deploy.yaml))
 
 Trigger on **GitHub Releases**, not just tags. A minimal job skeleton using PyPI Trusted Publishers (no API token to store or rotate):
 
