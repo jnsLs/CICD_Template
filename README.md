@@ -72,8 +72,7 @@ Use caching (e.g. `actions/cache` or Pixi caching) to speed up builds significan
 
 ### Release Workflow ([`deploy.yaml`](.github/workflows/deploy.yaml))
 
-Trigger on **GitHub Releases**, not just tags. A minimal job skeleton using PyPI Trusted Publishers (no API token to store or rotate):
-
+Trigger on **GitHub Releases** using PyPI Trusted Publishers (no API token or password needed):
 
 The OIDC handshake requires both `id-token: write` in the workflow **and** a one-time Trusted Publisher entry on PyPI (Account → Publishing → Add a new publisher).
 
