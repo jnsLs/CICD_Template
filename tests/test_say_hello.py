@@ -1,4 +1,4 @@
-from hello_world.custom_functions import say_goodbye, say_hello, say_how_are_you
+from cicd_template.custom_functions import say_goodbye, say_hello, say_how_are_you
 
 
 def test_say_hello_returns_greeting() -> None:

@@ -1,8 +1,8 @@
 [project]
 authors = [{name = "Jonas", email = "jonas.lederer@tu-berlin.de"}]
 dependencies = ["cowpy>=1.1.5,<2"]
-name = "hello_world"
-requires-python = ">=3.11,<3.12"
+name = "cicd_template"
+requires-python = ">=3.14,<3.15"
 version = "0.1.0"
 
 [build-system]
@@ -17,7 +17,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64"]
 
 [tool.pixi.pypi-dependencies]
-hello_world = { path = ".", editable = true }
+cicd_template = { path = ".", editable = true }
 
 [tool.pixi.tasks]
 start = "python ./src/scripts/cli.py"
@@ -25,7 +25,7 @@ test = "pytest --cov=src --cov-report=term-missing"
 
 [tool.pixi.dependencies]
 pre-commit = ">=4.6.0,<5"
-ruff = ">=0.15.11,<0.16"
+ruff = ">=0.16.6,<0.17"
 pytest = ">=9,<10"
 pytest-cov = ">=7,<8"
 python-build = ">=1,<2"
