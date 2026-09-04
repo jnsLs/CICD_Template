@@ -1,4 +1,5 @@
 # CI/CD Setup Guide (GitHub + Pixi + Python)
+A reusable template for Python projects with Pixi, testing, linting, pre-commit hooks, GitHub Actions, coverage reporting, and automated dependency updates.
 
 ## 1. Branching & Protection Strategy
 
