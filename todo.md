@@ -1,3 +1,0 @@
-# TODOS
-
-- create PyPI profile
