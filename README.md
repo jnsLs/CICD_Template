@@ -20,7 +20,7 @@ Apply rules to **`main`** and **`dev`** via repo settings → branches → add b
 - **Restrict who can push** to `main` (only maintainers / specific roles) to enforce the feature → dev → main flow
 
 
-### Environments (TODO)
+### (TODO) Environments
 Use GitHub Environments:
 - Define environments like `staging` and `production`
 - Add:
@@ -86,7 +86,7 @@ No `PYPI_API_TOKEN` needed — auth is OIDC, gated by `permissions: id-token: wr
 3. PyPI versions are immutable: once a version is uploaded it can never be replaced, only [yanked](https://packaging.python.org/en/latest/guides/making-a-pypi-friendly-readme/). Any fix, however small, needs a fresh version bump.
 4. Verify: check the workflow run succeeded, then confirm the new version shows up at `https://pypi.org/project/<name>/`.
 
-### Documentation (`docs.yml`)
+### (TODO) Documentation (`docs.yml`)
 Docs build/publish belongs in its own workflow, separate from release:
 - **Tooling**: [MkDocs](https://www.mkdocs.org/) (Markdown-based, simple) or [Sphinx](https://www.sphinx-doc.org/) (richer, common in scientific Python).
 - **Hosting**: [Read the Docs](https://readthedocs.org/) auto-builds on push to `main` once you connect the repo — no workflow file needed beyond webhook setup. Alternative: build in Actions and deploy to GitHub Pages.
